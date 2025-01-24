@@ -1,0 +1,130 @@
+/*
+ * TODO: create a button to toggle dark theme
+ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+:root {
+    --main-color: #6267c9;
+    --main-color-lighter: #9b9deb;
+    --main-color-darker: #4a4e9b;
+
+    --dark-color: #121212;
+    --dark-color-lighter: #1f1f1f;
+    --dark-color-darker: #171717;
+
+    --light-color: #d3d3d3;
+    --light-color-lighter: #eaeaea;
+    --light-color-darker: #c9c9c9;
+
+    --padding-input: 8px;
+    --border-radius: 6px;
+    --border-width: 1px;
+    --border-style: solid;
+
+    --transition: 0.2s ease-in-out;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--dark-color);
+    color: var(--light-color);
+    font-family: "Inter", serif;
+
+}
+
+a {
+    color: var(--main-color);
+    text-decoration: none;
+    transition: var(--transition);
+
+    &:hover {
+        color: var(--main-color-lighter);
+        transition: var(--transition);
+    }
+}
+
+input,
+textarea {
+    padding: var(--padding-input);
+
+    color: var(--light-color);
+
+    background-color: var(--dark-color-darker);
+    border: 1px solid var(--dark-color-lighter);
+    border-radius: var(--border-radius);
+    caret-color: var(--main-color);
+
+    caret-shape: underscore;
+
+    &::-ms-value {
+        color: var(--light-color-lighter);
+    }
+
+    &:focus {
+        outline: 1px solid var(--main-color);
+    }
+
+    &::file-selector-button,
+    &[type="submit"] {
+        padding: var(--padding-input);
+        border: 1px solid var(--main-color);
+        border-radius: var(--border-radius);
+        background-color: var(--dark-color-darker);
+        color: var(--main-color);
+        transition: var(--transition);
+        width: fit-content;
+    }
+
+    &::file-selector-button:hover,
+    &[type="submit"]:hover {
+        border-color: var(--main-color-lighter);
+        color: var(--main-color-lighter);
+        cursor: pointer;
+        transition: var(--transition);
+
+    }
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    & > div {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: fit-content;
+    }
+}
+
+
+header {
+    width: 100vw;
+
+    background-color: var(--dark-color-darker);
+
+    padding: 12px ;
+    display: flex;
+    place-items: center;
+    justify-content: center;
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+        display: flex;
+        gap: var(--padding-input);
+    }
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+
+    background-color: var(--dark-color-darker);
+
+    padding: 0  20px ;
+}

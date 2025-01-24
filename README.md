@@ -9,15 +9,16 @@ The company *Hackers Poulette ™* sells Raspberry Pi accessory kits to build yo
 ```PHP
 <?php
 
-return $config = [
-    'database' => [
-        'host' => 'your_host',
-        'dbname' => 'poulette', // or anything else but if you change the DB name, change it on the SQL file to !
-        'username' => 'your_username',
-        'password' => 'your_password',
-        'charset' => 'utf8mb4',
-    ],
-];
+class Config {
+    const string HOST = 'your_host';
+    const string PORT = 'your_DB_Port';
+    const string DBNAME = 'your_dB_Name';
+    const string USERNAME = 'your_username';
+    const string PASSWORD = 'your_password';
+    const string CHARSET = 'utf8mb4';
+}
+
+?>
 ```
 
 
