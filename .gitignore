@@ -1,4 +1,9 @@
+# IDE specific direcrtories
 .idea/
 .idea/*
 .vscode/
 .vscode/*
+
+# Project specific files
+
+*/config.php
