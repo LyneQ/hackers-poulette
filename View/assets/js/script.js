@@ -2,12 +2,10 @@
     const inputs = document.querySelectorAll('input[type=text], input[type=email], input[type=url]');
 
     inputs.forEach(input => {
-        console.log(input)
 
         input.addEventListener('keyup', (event) => {
 
             const inputValueLength = input.value.length;
-            console.log(inputValueLength)
 
             if ( !(inputValueLength < 2 || inputValueLength > 255) ) return input.nextElementSibling.remove();
             if  (input.nextElementSibling ) return;
