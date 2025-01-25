@@ -5,5 +5,5 @@
 .vscode/*
 
 # Project specific files
-
+uploads/
 */config.php
