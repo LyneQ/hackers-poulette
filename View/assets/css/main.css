@@ -94,6 +94,16 @@ textarea {
     }
 }
 
+#support {
+    &:disabled {
+        cursor: not-allowed;
+        background-color: dimgray;
+        color: darkgray;
+        border: none;
+        transition: none;
+    }
+}
+
 main {
     /*min-height: calc(100vh - 60px);*/
     min-height: calc(100vh - 130px);

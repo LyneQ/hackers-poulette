@@ -60,6 +60,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
+// TODO handle post variable g-recaptcha-response (https://developers.google.com/recaptcha/docs/verify?hl=fr) 
 ?>
 
 <form action="/index.php" method="post" class="form" enctype="multipart/form-data">
@@ -85,7 +87,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label for="description">description:</label>
         <textarea name="description" id="description" placeholder="K c'est une constante ..." required></textarea>
     </div>
-    <input type="submit" value="submit" />
+    
+    <div class="g-recaptcha" data-sitekey="6LePbsMqAAAAANj6JEuPNqKLr3p-sdXWxsreezZi" data-callback="callBack"></div>
+    <input id="support" type="submit" value="submit" disabled />
 </form>
 
 <script type="module" src="./View/assets/js/script.js" defer></script>
+<script type="text/javascript">
+    function callBack() {
+        const support = document.querySelector("#support")
+        if (!support) return;
+        support.removeAttribute("disabled");
+    }
+</script>

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./View/assets/css/main.css">
     <title>Hackers Poulette</title>
     <?php require_once './Route.php' ?>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <header>
