@@ -7,6 +7,8 @@ function getSanitizedInput(string $key, int $filter = FILTER_DEFAULT): ?string {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $requestValidityCaptchaToken = getSanitizedInput('g-recaptcha-response');
+
     $name = getSanitizedInput('name');
     $firstname = getSanitizedInput('firstname');
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
@@ -19,49 +21,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
     $file = $_FILES['file'] ?? null;
 
-    if (!$name || !$firstname || !$email || !$description) {
-        echo "<p style='color: red;'>Please fill all required fields correctly.</p>";
+
+    // Get the hidden input field that contains a captcha response
+    $gRecaptchaResponse = $_POST['g-recaptcha-response'] ?? null;
+
+    if (!$gRecaptchaResponse) {
+        echo "<p style='color: red;'>Captcha verification failed or missing.</p>";
     } else {
 
-        $fileUploadSuccess = false;
-        $allowedFormatTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+        $recaptchaSecretKey = Config::CAPTCHA_SECRET;
+        $apiUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
-        if (!empty($file['name'])) {
-            if (in_array($file['type'], $allowedFormatTypes) && $file['error'] === 0) {
-                $uploadDir = './uploads/';
-                if (!is_dir($uploadDir)) {
-                    mkdir($uploadDir, 0755, true);
-                }
+        // Make the request to verify the viability of the token
+        $recaptchaResponse = file_get_contents($apiUrl . '?secret=' . urlencode($recaptchaSecretKey) . '&response=' . urlencode($gRecaptchaResponse));
+        $recaptchaResult = json_decode($recaptchaResponse, true);
 
-                $filePath = $uploadDir . basename($file['name']);
-                if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                    $fileUploadSuccess = true;
+        if (!$recaptchaResult['success']) {
+            echo "<p style='color: red;'>Failed CAPTCHA validation. Please try again.</p>";
+            exit;
+        } else {
+            // TODO: inset logic here to store the data in database
+
+
+            if (!$name || !$firstname || !$email || !$description) echo "<p style='color: red;'>Please fill all required fields correctly.</p>";
+
+            $fileUploadSuccess = false;
+            $allowedFormatTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
+
+            if (!empty($file['name'])) {
+                if (in_array($file['type'], $allowedFormatTypes) && $file['error'] === 0) {
+                    $uploadDir = './uploads/';
+                    if (!is_dir($uploadDir)) {
+                        mkdir($uploadDir, 0755, true);
+                    }
+
+                    $filePath = $uploadDir . basename($file['name']);
+                    if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                        $fileUploadSuccess = true;
+                    }
+                } else {
+                    echo "<p style='color: red;'>Invalid file type or upload error.</p>";
                 }
-            } else {
-                echo "<p style='color: red;'>Invalid file type or upload error.</p>";
             }
+            echo "<div class='success-message'>";
+            echo "<p style='color: green;'>Form submitted successfully!</p>";
+            echo "<ul>";
+            echo "<li><strong>Name:</strong> " . htmlspecialchars($name) . "</li>";
+            echo "<li><strong>First Name:</strong> " . htmlspecialchars($firstname) . "</li>";
+            echo "<li><strong>Email:</strong> " . htmlspecialchars($email) . "</li>";
+            echo "<li><strong>Description:</strong> " . htmlspecialchars($description) . "</li>";
+
+            if ($fileUploadSuccess) {
+                echo "<li><strong>File:</strong> Uploaded successfully to $filePath</li>";
+            } elseif (!empty($file['name'])) {
+                echo "<li><strong>File:</strong> Upload failed.</li>";
+            }
+            echo "</ul> </div>";
         }
-
-        echo "<div class='success-message'>";
-        echo "<p style='color: green;'>Form submitted successfully!</p>";
-        echo "<ul>";
-        echo "<li><strong>Name:</strong> " . htmlspecialchars($name) . "</li>";
-        echo "<li><strong>First Name:</strong> " . htmlspecialchars($firstname) . "</li>";
-        echo "<li><strong>Email:</strong> " . htmlspecialchars($email) . "</li>";
-        echo "<li><strong>Description:</strong> " . htmlspecialchars($description) . "</li>";
-
-        if ($fileUploadSuccess) {
-            echo "<li><strong>File:</strong> Uploaded successfully to $filePath</li>";
-        } elseif (!empty($file['name'])) {
-            echo "<li><strong>File:</strong> Upload failed.</li>";
-        }
-
-        echo "</ul> </div>";
     }
 }
-
-
-// TODO handle post variable g-recaptcha-response (https://developers.google.com/recaptcha/docs/verify?hl=fr) 
 ?>
 
 <form action="/index.php" method="post" class="form" enctype="multipart/form-data">
@@ -94,9 +112,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <script type="module" src="./View/assets/js/script.js" defer></script>
 <script type="text/javascript">
-    function callBack() {
-        const support = document.querySelector("#support")
+    function createCaptchaInput(name, value) {
+        const input = document.createElement("input");
+        input.setAttribute("name", name);
+        input.setAttribute("value", value);
+        return input;
+    }
+
+    async function callBack() {
+        const support = document.querySelector("#support");
         if (!support) return;
-        support.removeAttribute("disabled");
+
+        // get the captcha response and store it into an input field
+        const response = await grecaptcha.getResponse();
+        if (!response) {
+            console.error("Recaptcha verification failed or no response provided.");
+            return;
+        }
+        console.log(response)
+
+        const inputCaptchaData = createCaptchaInput("g-recaptcha-response", response);
+        support.append(inputCaptchaData);
+
+
+        const newElement = document.createElement("input");
+        newElement.setAttribute("type", "text");
+        support.append(newElement);
+
+        // Suppression contrôlée de 'disabled'
+        if (support.hasAttribute("disabled")) {
+            support.removeAttribute("disabled");
+        }
     }
 </script>

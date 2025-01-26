@@ -97,9 +97,10 @@ textarea {
 #support {
     &:disabled {
         cursor: not-allowed;
-        background-color: dimgray;
-        color: darkgray;
-        border: none;
+        background-color: var(--dark-color-darker);
+        color: var(--light-color-darker);
+        border: 1px solid #2f2f2f;
+        opacity: 0.6;
         transition: none;
     }
 }

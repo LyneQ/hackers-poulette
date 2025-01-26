@@ -10,12 +10,13 @@ The company *Hackers Poulette ™* sells Raspberry Pi accessory kits to build yo
 <?php
 
 class Config {
-    const string HOST = 'your_host';
-    const string PORT = 'your_DB_Port';
-    const string DBNAME = 'your_dB_Name';
-    const string USERNAME = 'your_username';
-    const string PASSWORD = 'your_password';
-    const string CHARSET = 'utf8mb4';
+    const HOST = 'your_host';
+    const PORT = 'your_DB_Port';
+    const DBNAME = 'your_dB_Name';
+    const USERNAME = 'your_username';
+    const PASSWORD = 'your_password';
+    const CHARSET = 'utf8mb4';
+    const CAPTCHA_SECRET = "your-gcaptcha_secre";
 }
 
 ?>
