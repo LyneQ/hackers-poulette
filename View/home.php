@@ -1,7 +1,5 @@
 <?php
 
-use Controller\DatabaseController;
-
 function getSanitizedInput(string $key, int $filter = FILTER_DEFAULT): ?string {
     $value = filter_input(INPUT_POST, $key, $filter);
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?: null;
@@ -42,44 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<p style='color: red;'>Failed CAPTCHA validation. Please try again.</p>";
             exit;
         } else {
-            // TODO: inset logic here to store the data in database
-            $controller = new DatabaseController();
-            $controller->saveSupportTicket($_POST);
-
-            if (!$name || !$firstname || !$email || !$description) echo "<p style='color: red;'>Please fill all required fields correctly.</p>";
-
-            $fileUploadSuccess = false;
-            $allowedFormatTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'];
-
-            if (!empty($file['name'])) {
-                if (in_array($file['type'], $allowedFormatTypes) && $file['error'] === 0) {
-                    $uploadDir = './uploads/';
-                    if (!is_dir($uploadDir)) {
-                        mkdir($uploadDir, 0755, true);
-                    }
-
-                    $filePath = $uploadDir . basename($file['name']);
-                    if (move_uploaded_file($file['tmp_name'], $filePath)) {
-                        $fileUploadSuccess = true;
-                    }
-                } else {
-                    echo "<p style='color: red;'>Invalid file type or upload error.</p>";
-                }
+            try {
+                $controller = new SupportTicketController();
+                $controller->setTicket($_POST);
+                $controller->saveTicket();
+                echo $controller->setView();
+            } catch(Exception $exception) {
+                echo '<p style="color: red;">'.$exception->getMessage().'</p>';
             }
-            echo "<div class='success-message'>";
-            echo "<p style='color: green;'>Form submitted successfully!</p>";
-            echo "<ul>";
-            echo "<li><strong>Name:</strong> " . htmlspecialchars($name) . "</li>";
-            echo "<li><strong>First Name:</strong> " . htmlspecialchars($firstname) . "</li>";
-            echo "<li><strong>Email:</strong> " . htmlspecialchars($email) . "</li>";
-            echo "<li><strong>Description:</strong> " . htmlspecialchars($description) . "</li>";
-
-            if ($fileUploadSuccess) {
-                echo "<li><strong>File:</strong> Uploaded successfully to $filePath</li>";
-            } elseif (!empty($file['name'])) {
-                echo "<li><strong>File:</strong> Upload failed.</li>";
-            }
-            echo "</ul> </div>";
         }
     }
 }

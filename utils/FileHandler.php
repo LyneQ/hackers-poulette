@@ -1,6 +1,4 @@
-<?php
-    use FileStatus;
-    
+<?php    
     class FileHandler {
         readonly string $url;
         readonly FileStatus $status;
