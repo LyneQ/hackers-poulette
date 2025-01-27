@@ -1,10 +1,10 @@
 <?php
     class SupportTicket {
-        private string $name;
-        private string $firstName;
-        private string $email;
-        private ?string $fileURL;
-        private string $description;
+        readonly string $name;
+        readonly string $firstName;
+        readonly string $email;
+        readonly ?string $fileURL;
+        readonly string $description;
 
         function __construct(string $name, string $firstName, string $email, ?string $fileURL = null, string $description)
         {

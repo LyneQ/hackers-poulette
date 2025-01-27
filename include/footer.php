@@ -1,6 +1,7 @@
 <?php
-$year = date('Y');
+    $year = date('Y');
 ?>
+
 <footer>
     <p>Copyright <?= $year ?> <b>Hackers Poulette ™</b> </p>
 </footer>
