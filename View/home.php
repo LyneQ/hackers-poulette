@@ -1,5 +1,7 @@
 <?php
 
+use Controller\DatabaseController;
+
 function getSanitizedInput(string $key, int $filter = FILTER_DEFAULT): ?string {
     $value = filter_input(INPUT_POST, $key, $filter);
     return htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?: null;
@@ -41,7 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         } else {
             // TODO: inset logic here to store the data in database
-
+            $controller = new DatabaseController();
+            $controller->saveSupportTicket($_POST);
 
             if (!$name || !$firstname || !$email || !$description) echo "<p style='color: red;'>Please fill all required fields correctly.</p>";
 
@@ -99,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div>
         <label for="file">file:</label>
         <input type="file" name="file" id="file" accept="image/png, image/jpeg, image/jpg, image/gif"/>
-        <input type="url" name="file" id="file" placeholder="https://exemple.com/image.png"/>
+        <input type="url" name="fileURL" id="fileURL" placeholder="https://exemple.com/image.png"/>
     </div>
     <div>
         <label for="description">description:</label>
