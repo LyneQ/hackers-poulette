@@ -33,7 +33,7 @@
 
             $mail->send();
         } catch(Exception $exception) {
-            throw new Exception('Mail to support was not sent ! '. $exception->getMessage());
+            echo '<p style="color: red;">Mail to support was not sent !<br/>'.$exception->getMessage().'</p>';
         }
     }
 ?>
