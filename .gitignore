@@ -7,3 +7,6 @@
 # Project specific files
 uploads/
 */config.php
+
+# Composer
+vendor/
