@@ -6,7 +6,8 @@
 
 # Project specific files
 uploads/
-*/config.php
+**/config.php
+**/SMTP.php
 
 # Composer
 vendor/
