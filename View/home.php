@@ -1,56 +1,58 @@
 <?php
+    require './utils/sendEmail.php';
 
-function getSanitizedInput(string $key, int $filter = FILTER_DEFAULT): ?string {
-    $value = filter_input(INPUT_POST, $key, $filter);
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?: null;
-}
+    function getSanitizedInput(string $key, int $filter = FILTER_DEFAULT): ?string {
+        $value = filter_input(INPUT_POST, $key, $filter);
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8') ?: null;
+    }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $requestValidityCaptchaToken = getSanitizedInput('g-recaptcha-response');
+        $requestValidityCaptchaToken = getSanitizedInput('g-recaptcha-response');
 
-    $name = getSanitizedInput('name');
-    $firstname = getSanitizedInput('firstname');
-    $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
-    $description = getSanitizedInput('description');
-    $file = $_FILES['file'] ?? null;
-
-
-    $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
-    $firstname = htmlspecialchars($firstname, ENT_QUOTES, 'UTF-8');
-    $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
-    $file = $_FILES['file'] ?? null;
+        $name = getSanitizedInput('name');
+        $firstname = getSanitizedInput('firstname');
+        $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+        $description = getSanitizedInput('description');
+        $file = $_FILES['file'] ?? null;
 
 
-    // Get the hidden input field that contains a captcha response
-    $gRecaptchaResponse = $_POST['g-recaptcha-response'] ?? null;
+        $name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
+        $firstname = htmlspecialchars($firstname, ENT_QUOTES, 'UTF-8');
+        $description = htmlspecialchars($description, ENT_QUOTES, 'UTF-8');
+        $file = $_FILES['file'] ?? null;
 
-    if (!$gRecaptchaResponse) {
-        echo "<p style='color: red;'>Captcha verification failed or missing.</p>";
-    } else {
 
-        $recaptchaSecretKey = Config::CAPTCHA_SECRET;
-        $apiUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        // Get the hidden input field that contains a captcha response
+        $gRecaptchaResponse = $_POST['g-recaptcha-response'] ?? null;
 
-        // Make the request to verify the viability of the token
-        $recaptchaResponse = file_get_contents($apiUrl . '?secret=' . urlencode($recaptchaSecretKey) . '&response=' . urlencode($gRecaptchaResponse));
-        $recaptchaResult = json_decode($recaptchaResponse, true);
-
-        if (!$recaptchaResult['success']) {
-            echo "<p style='color: red;'>Failed CAPTCHA validation. Please try again.</p>";
-            exit;
+        if (!$gRecaptchaResponse) {
+            echo "<p style='color: red;'>Captcha verification failed or missing.</p>";
         } else {
-            try {
-                $controller = new SupportTicketController();
-                $controller->setTicket($_POST);
-                $controller->saveTicket();
-                echo $controller->setView();
-            } catch(Exception $exception) {
-                echo '<p style="color: red;">'.$exception->getMessage().'</p>';
+
+            $recaptchaSecretKey = Config::CAPTCHA_SECRET;
+            $apiUrl = 'https://www.google.com/recaptcha/api/siteverify';
+
+            // Make the request to verify the viability of the token
+            $recaptchaResponse = file_get_contents($apiUrl . '?secret=' . urlencode($recaptchaSecretKey) . '&response=' . urlencode($gRecaptchaResponse));
+            $recaptchaResult = json_decode($recaptchaResponse, true);
+
+            if (!$recaptchaResult['success']) {
+                echo "<p style='color: red;'>Failed CAPTCHA validation. Please try again.</p>";
+                exit;
+            } else {
+                try {
+                    $controller = new SupportTicketController();
+                    $controller->setTicket($_POST);
+                    $controller->saveTicket();
+                    sendEmail($controller->getTicket());
+                    echo $controller->setView();
+                } catch(Exception $exception) {
+                    echo '<p style="color: red;">'.$exception->getMessage().'</p>';
+                }
             }
         }
     }
-}
 ?>
 
 <form action="/index.php" method="post" class="form" enctype="multipart/form-data">
