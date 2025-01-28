@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS tickets
 (
     name        TINYTEXT      NOT NULL,
     firstname   TINYTEXT      NOT NULL,
-    lastname    TINYTEXT      NOT NULL,
     email       TINYTEXT      NOT NULL,
     file        TINYTEXT,
     description VARCHAR(1000) NOT NULL
