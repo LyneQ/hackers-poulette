@@ -74,5 +74,9 @@
             if (!isset($this->ticketView)) throw new Exception("Support ticket view not found !");
             return $this->ticketView->getView();
         }
+
+        public function getTicket(): SupportTicket {
+            return $this->ticket;
+        }
     }
 ?>
