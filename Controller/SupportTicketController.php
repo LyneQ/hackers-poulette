@@ -51,7 +51,7 @@
                 $fileURL = $_POST['fileURL'];
             }
             
-            $this->ticket = new SupportTicket($name, $firstname, $email, $fileURL, $description);
+            $this->ticket = new SupportTicket($name, $firstname, $email, $description, $fileURL);
             $this->ticketView = new SupportTicketView($this->ticket);
         }
 

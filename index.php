@@ -3,7 +3,7 @@
 <?php
     require_once './Config/config.php';
     require_once './Controller/SupportTicketController.php';
-    // setup usefull variable
+
     $page = $_GET['page'] ?? Page::Home->value;
 ?>
 
