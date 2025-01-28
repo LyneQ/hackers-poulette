@@ -94,6 +94,17 @@ textarea {
     }
 }
 
+#support {
+    &:disabled {
+        cursor: not-allowed;
+        background-color: var(--dark-color-darker);
+        color: var(--light-color-darker);
+        border: 1px solid #2f2f2f;
+        opacity: 0.6;
+        transition: none;
+    }
+}
+
 main {
     /*min-height: calc(100vh - 60px);*/
     min-height: calc(100vh - 130px);

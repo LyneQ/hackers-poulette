@@ -7,6 +7,7 @@ class Config {
     const USERNAME = '';
     const PASSWORD = '';
     const CHARSET = '';
+    const CAPTCHA_SECRET = ''; // Server side reCaptcha key
 }
 
 ?>

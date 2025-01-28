@@ -4,11 +4,10 @@
     inputs.forEach(input => {
 
         input.addEventListener('keyup', (event) => {
-
             const inputValueLength = input.value.length;
 
-            if ( !(inputValueLength < 2 || inputValueLength > 255) ) return input.nextElementSibling.remove();
-            if  (input.nextElementSibling ) return;
+            if  (!input.nextElementSibling) return;
+            if (!(inputValueLength < 2 || inputValueLength > 255)) return input.nextElementSibling.remove();
 
             const errorBox = document.createElement('div')
             errorBox.classList.add('input_error');

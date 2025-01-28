@@ -7,10 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./View/assets/css/main.css">
     <title>Hackers Poulette</title>
-    <?php require_once './Route.php' ?>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 <header>
+    <?php
+        require_once './utils/Page.php';
+        require_once './utils/Route.php';
+    ?>
     <nav>
         <ul>
             <?php foreach (Page::cases() as $page) : ?>

@@ -1,13 +1,9 @@
-<?php require 'include/header.php'; ?>
+<?php require_once 'include/header.php'; ?>
 
 <?php
-    use Controller\DatabaseController;
-    // import all necessary elements
-    require 'Controller/DatabaseController.php';
-    require_once 'Route.php';
+    require_once './Config/config.php';
+    require_once './Controller/SupportTicketController.php';
 
-    // setup usefull variable
-    $db = new DatabaseController();
     $page = $_GET['page'] ?? Page::Home->value;
 ?>
 
@@ -20,4 +16,4 @@
     ?>
 </main>
 
-<?php require 'include/footer.php'; ?>
+<?php require_once 'include/footer.php'; ?>
